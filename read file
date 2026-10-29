@@ -1,0 +1,78 @@
+# INFIX-TO-POSTFIX-CONVERSION-USING-REVERSE-POLISH-NOTATION
+This C project converts infix expressions (like A+B) to postfix notation (like AB+) using a LIFO stack,
+handling operator precedence and associativity across modular files (header.h, main.c, pushpop.c, precedence.c, convert.c) built with a Makefile.
+
+
+Concepts Used
+1.	Infix notation
+The operator is written between operands. Example: A+B.
+2.	Postfix notation / RPN
+The operator is written after the operands. Example: A+B becomes AB+.
+3.	Stack (LIFO)
+A stack follows Last-In, First-Out. push() inserts an item and pop() removes the top item.
+4.	Operator precedence and associativity Operator Priority Associativity
+^	3 (highest) Right to left
+* and /	2	Left to right
++ and -	1 (lowest) Left to right
+5.	Modular programming and Makefile
+A large program is split into several .c files, each doing one job. A shared header file holds common
+declarations. A Makefile tells the make utility how to compile each file into an object file and link them into one executable.
+
+
+Project Files infix_postfix/
+├── header.h
+├── main.c
+├── pushpop.c
+├── precedence.c 
+├── convert.c
+└── Makefile
+
+File	Purpose
+header.h -	Header files, constants, global variable and function declarations main.c -	Reads the infix expression and calls convert()
+pushpop.c -	Defines the stack array, top, and the push() and pop() functions precedence.c Defines
+precedence()- which returns the priority of an operator convert.c Implements the infix-to-postfix algorithm in convert()
+Makefile -	Compiles all files and links them into a.out
+
+
+Algorithm
+Step 1: Start.
+Step 2: Declare an infix array, a postfix array, and a stack. Step 3: Initialize top = -1 and postfix index j = 0.
+Step 4: Read the infix expression from the user.
+Step 5: Scan the infix expression from left to right, one character at a time, until the null character '\0' is reached.
+Step 6: If the current character is an operand (letter or digit), append it directly to the postfix expression.
+Step 7: If the current character is an opening parenthesis (, push it onto the stack.
+Step 8: If the current character is a closing parenthesis ):
+•	a. Pop operators from the stack and append them to postfix until ( is found or the stack becomes empty.
+•	b. If ( is found, pop it and do not append it to postfix. Step 9: If the current character is an operator:
+•	a. While the stack is not empty and the top is not (: o	If the top operator has higher precedence than the current operator, 
+pop it to postfix. o	If both have equal precedence and the current operator is not ^, pop the top operator to postfix.
+o	Otherwise, stop popping.
+•	b. Push the current operator onto the stack.
+ 
+Step 10: After all input characters are processed, pop all remaining stack operators and append them to postfix.
+Step 11: Add '\0' at the end of the postfix array. Step 12: Display the postfix expression.
+Step 13: Stop.
+
+
+Test Cases and Sample Results
+No. Infix expression Expected postfix
+
+1	A+B -> AB+	
+2	A+B*C ->	ABC*+
+3	(A+B)*(C-D) ->	AB+CD-*
+4	(A+B)*(C-D)^E	-> AB+CD-E^*
+5	A^B^C ->	ABC^^
+
+
+Dry Run Table (A+B*C)
+
+Step	                   Scanned Symbol	                 Stack Contents (Bottom → Top)	                       POSTFIX Expression
+1                            	A	                                  (empty)                                              	A
+2	                            +	                                     +	                                                A
+3	                            B	                                     +                                                 	A B
+4	                            *                                    	+, *                                               	A B
+5	                            C	                                   + , *	                                              A B C
+6	                         (End)	                                  (empty)                                            	A B C * +
+
+Example terminal run:
+Enter infix expression: (A+B)*(C-D)^E Postfix expression: AB+CD-E^*
